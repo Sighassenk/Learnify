@@ -19,22 +19,23 @@ import com.example.myapplication.models.Lesson;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> {
 
     private final List<Section> sections;
     private final String        enrollmentId;
     private final boolean       isEnrolled;
-    private final int           totalLessons;
+    private final List<String>  completedLessons;
     private final Context       context;
     private final LessonRepository lessonRepository = new LessonRepository();
 
     public SectionAdapter(List<Section> sections, String enrollmentId,
-                          boolean isEnrolled, int totalLessons, Context context) {
+                          boolean isEnrolled, List<String> completedLessons, Context context) {
         this.sections     = sections;
         this.enrollmentId = enrollmentId;
         this.isEnrolled   = isEnrolled;
-        this.totalLessons = totalLessons;
+        this.completedLessons = completedLessons != null ? completedLessons : new ArrayList<>();
         this.context      = context;
     }
 
@@ -55,7 +56,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             @Override
             public void onSuccess(List<Lesson> lessons) {
                 LessonAdapter lessonAdapter = new LessonAdapter(
-                        lessons, enrollmentId, isEnrolled, totalLessons, context);
+                        lessons, enrollmentId, isEnrolled, completedLessons, context);
 
                 holder.rvLessons.setLayoutManager(new LinearLayoutManager(context));
                 holder.rvLessons.setNestedScrollingEnabled(false);

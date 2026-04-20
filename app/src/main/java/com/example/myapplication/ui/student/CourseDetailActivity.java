@@ -19,6 +19,9 @@ import com.example.myapplication.repositories.EnrollmentRepository;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.example.myapplication.utils.SessionManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CourseDetailActivity extends AppCompatActivity {
 
     private TextView    tvTitle, tvDescription, tvInstructor, tvPrice, tvRating, tvCategory;
@@ -33,7 +36,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private String   courseId, userId, enrollmentId;
     private boolean  isEnrolled = false;
-    private int      totalLessons = 0;
+    private List<String> completedLessons = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,6 @@ public class CourseDetailActivity extends AppCompatActivity {
                     Course course = doc.toObject(Course.class);
                     if (course == null) return;
 
-                    totalLessons = course.getTotalLessons();
                     tvTitle.setText(course.getTitle());
                     tvDescription.setText(course.getDescription());
                     tvInstructor.setText("By " + course.getInstructorName());
@@ -113,6 +115,9 @@ public class CourseDetailActivity extends AppCompatActivity {
             if (enrollment != null) {
                 isEnrolled   = true;
                 enrollmentId = enrollment.getId();
+                completedLessons = enrollment.getCompletedLessons();
+                if (completedLessons == null) completedLessons = new ArrayList<>();
+
                 btnEnroll.setText("Already Enrolled");
                 btnEnroll.setEnabled(false);
 
@@ -128,7 +133,7 @@ public class CourseDetailActivity extends AppCompatActivity {
     private void loadSections() {
         courseRepository.getSections(courseId, sections -> {
             SectionAdapter adapter = new SectionAdapter(
-                    sections, enrollmentId, isEnrolled, totalLessons, this);
+                    sections, enrollmentId, isEnrolled, completedLessons, this);
             rvSections.setAdapter(adapter);
         });
     }

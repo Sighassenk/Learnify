@@ -94,7 +94,7 @@ public class ManageCourseActivity extends AppCompatActivity {
             sectionList.clear();
             sectionList.addAll(sections);
             SectionAdapter adapter = new SectionAdapter(
-                    sectionList, null, false, 0, this);
+                    sectionList, null, false, null, this);
             rvSections.setAdapter(adapter);
         });
     }

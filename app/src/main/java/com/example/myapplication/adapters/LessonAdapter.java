@@ -2,6 +2,7 @@ package com.example.myapplication.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +23,15 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
     private final List<Lesson> lessons;
     private final String       enrollmentId;
     private final boolean      isEnrolled;
-    private final int          totalLessons;
+    private final List<String>  completedLessons;
     private final Context      context;
 
     public LessonAdapter(List<Lesson> lessons, String enrollmentId,
-                         boolean isEnrolled, int totalLessons, Context context) {
+                         boolean isEnrolled, List<String> completedLessons, Context context) {
         this.lessons      = lessons;
         this.enrollmentId = enrollmentId;
         this.isEnrolled   = isEnrolled;
-        this.totalLessons = totalLessons;
+        this.completedLessons = completedLessons;
         this.context      = context;
     }
 
@@ -51,7 +52,15 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         int secs = lesson.getDuration() % 60;
         holder.tvDuration.setText(String.format("%d:%02d", mins, secs));
 
-        // Use standard icons if custom ones are missing
+        boolean isDone = completedLessons != null && completedLessons.contains(lesson.getId());
+        
+        if (isDone) {
+            holder.tvLessonTitle.setTextColor(Color.parseColor("#4CAF50")); // Green color
+        } else {
+            holder.tvLessonTitle.setTextColor(Color.BLACK);
+        }
+
+        // Use standard icons
         holder.ivLock.setImageResource(
                 isEnrolled ? android.R.drawable.ic_media_play : android.R.drawable.ic_lock_lock);
 
@@ -82,7 +91,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
             super(itemView);
             tvLessonTitle = itemView.findViewById(R.id.tvLessonTitle);
             tvDuration    = itemView.findViewById(R.id.tvDuration);
-            ivLock        = itemView.findViewById(R.id.ivLock);
+            ivLock        = itezView.findViewById(R.id.ivLock);
         }
     }
 }
